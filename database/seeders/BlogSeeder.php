@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use App\Models\Comment;
-use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -54,23 +52,5 @@ class BlogSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@techblog.com',
         ]);
-
-        $users = User::factory(5)->create();
-        $allUsers = $users->push($admin);
-
-        Post::factory(20)->create([
-            'user_id' => $allUsers->random()->id,
-            'category_id' => $categories->random()->id,
-        ])->each(function (Post $post) use ($tags, $allUsers) {
-            // Прикріплюємо випадкові теги до поста
-            $post->tags()->attach(
-                $tags->random(rand(2, 4))->pluck('id')
-            );
-
-            Comment::factory(rand(3, 8))->create([
-                'post_id' => $post->id,
-                'user_id' => $allUsers->random()->id,
-            ]);
-        });
     }
 }
