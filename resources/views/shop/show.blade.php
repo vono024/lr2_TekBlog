@@ -54,10 +54,10 @@
                     @endif
 
                     <div class="flex gap-4">
-                        <button class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 font-semibold transition">
+                        <button onclick="buyProduct('{{ $product->name }}')" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 font-semibold transition">
                             🛒 Купити зараз
                         </button>
-                        <button class="px-6 bg-slate-700 text-gray-300 py-3 rounded-lg hover:bg-slate-600 transition">
+                        <button onclick="addToFavorites('{{ $product->name }}')" class="px-6 bg-slate-700 text-gray-300 py-3 rounded-lg hover:bg-slate-600 transition">
                             💝 В обране
                         </button>
                     </div>
@@ -90,4 +90,14 @@
             </a>
         </div>
     </div>
+
+    <script>
+        function buyProduct(productName) {
+            alert('✅ Дякуємо за покупку!\n\n🎉 Ви придбали: ' + productName + '\n\n📧 Деталі надіслано на вашу email адресу.\n💳 Це імітація покупки для демонстрації.');
+        }
+
+        function addToFavorites(productName) {
+            alert('💝 Додано в обране!\n\n' + productName + ' тепер у вашому списку бажань.');
+        }
+    </script>
 @endsection

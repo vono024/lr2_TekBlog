@@ -23,41 +23,50 @@
     </script>
 </head>
 <body class="bg-slate-900 text-gray-100 min-h-screen">
-<nav class="bg-slate-800 shadow-lg mb-8 border-b border-slate-700">
-    <div class="container mx-auto px-6 py-4">
-        <div class="flex justify-between items-center">
-            <div>
+@if(!in_array(Route::currentRouteName(), ['login', 'register']))
+    <nav class="bg-slate-800 shadow-lg mb-8 border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <a href="{{ route('home') }}" class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent hover:from-blue-400 hover:to-purple-500">
+                        💻 Tech Blog
+                    </a>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <a href="{{ route('home') }}" class="text-gray-300 hover:text-blue-400 transition">Головна</a>
+                    <a href="{{ route('posts.index') }}" class="text-gray-300 hover:text-blue-400 transition">Пости</a>
+                    <a href="{{ route('categories.index') }}" class="text-gray-300 hover:text-blue-400 transition">Категорії</a>
+                    <a href="{{ route('tags.index') }}" class="text-gray-300 hover:text-blue-400 transition">Теги</a>
+                    <a href="{{ route('shop.index') }}" class="text-gray-300 hover:text-blue-400 transition">🛒 Магазин</a>
+
+                    @auth
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="text-gray-300 hover:text-red-400 transition">
+                                Вихід ({{ auth()->user()->name }})
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="text-gray-300 hover:text-blue-400 transition">Вхід</a>
+                        <a href="{{ route('register') }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                            Реєстрація
+                        </a>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </nav>
+@else
+    <nav class="bg-slate-800 shadow-lg mb-8 border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="text-center">
                 <a href="{{ route('home') }}" class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent hover:from-blue-400 hover:to-purple-500">
                     💻 Tech Blog
                 </a>
             </div>
-            <div class="flex space-x-6 items-center">
-                <a href="{{ route('home') }}" class="text-gray-300 hover:text-blue-400 transition">Головна</a>
-                <a href="{{ route('posts.index') }}" class="text-gray-300 hover:text-blue-400 transition">Пости</a>
-                <a href="{{ route('categories.index') }}" class="text-gray-300 hover:text-blue-400 transition">Категорії</a>
-                <a href="{{ route('tags.index') }}" class="text-gray-300 hover:text-blue-400 transition">Теги</a>
-                <a href="{{ route('shop.index') }}" class="text-gray-300 hover:text-blue-400 transition">🛒 Магазин</a>
-
-                @auth
-                    <a href="{{ route('posts.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                        Створити пост
-                    </a>
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="text-gray-300 hover:text-red-400 transition">
-                            Вихід ({{ auth()->user()->name }})
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="text-gray-300 hover:text-blue-400 transition">Вхід</a>
-                    <a href="{{ route('register') }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
-                        Реєстрація
-                    </a>
-                @endauth
-            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+@endif
 
 <div class="container mx-auto px-6">
     @include('partials.flash')
@@ -67,10 +76,12 @@
     @yield('content')
 </main>
 
-<footer class="bg-slate-800 text-gray-300 mt-12 py-6 border-t border-slate-700">
-    <div class="container mx-auto px-6 text-center">
-        <p>&copy; 2025 Tech Blog. Всі права захищені.</p>
-    </div>
-</footer>
+@if(!in_array(Route::currentRouteName(), ['login', 'register']))
+    <footer class="bg-slate-800 text-gray-300 mt-12 py-6 border-t border-slate-700">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Tech Blog. Всі права захищені.</p>
+        </div>
+    </footer>
+@endif
 </body>
 </html>

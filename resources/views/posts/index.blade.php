@@ -6,9 +6,14 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">📰 Всі пости</h1>
         @auth
-            <a href="{{ route('posts.create') }}" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                + Створити пост
-            </a>
+            <div class="flex space-x-4">
+                <a href="{{ route('user.posts', auth()->user()) }}" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    👤 Мої пости
+                </a>
+                <a href="{{ route('posts.create') }}" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                    + Створити пост
+                </a>
+            </div>
         @endauth
     </div>
 
@@ -35,9 +40,11 @@
                         {{ Str::limit($post->excerpt, 100) }}
                     </p>
 
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-500">👤 {{ $post->author->name }}</span>
+                            <a href="{{ route('user.posts', $post->author) }}" class="text-sm text-gray-500 hover:text-blue-400 transition">
+                                👤 {{ $post->author->name }}
+                            </a>
                         </div>
                         <div class="flex space-x-2">
                             @foreach($post->tags->take(3) as $tag)

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -23,6 +22,10 @@ class PostController extends Controller
 
     public function create()
     {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('status', 'Увійдіть для створення поста');
+        }
+
         $categories = Category::all();
         $tags = Tag::all();
 
@@ -31,6 +34,10 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'excerpt' => ['nullable', 'string'],
@@ -40,7 +47,7 @@ class PostController extends Controller
             'tags.*' => ['exists:tags,id'],
         ]);
 
-        $data['user_id'] = User::first()->id;
+        $data['user_id'] = auth()->id();
         $data['slug'] = Str::slug($data['title']) . '-' . Str::random(6);
         $data['published_at'] = now();
         $data['is_published'] = true;
@@ -64,6 +71,10 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        if (!auth()->check() || auth()->id() !== $post->user_id) {
+            abort(403, 'Ви не можете редагувати цей пост');
+        }
+
         $categories = Category::all();
         $tags = Tag::all();
 
@@ -72,6 +83,10 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
+        if (!auth()->check() || auth()->id() !== $post->user_id) {
+            abort(403, 'Ви не можете редагувати цей пост');
+        }
+
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'excerpt' => ['nullable', 'string'],
@@ -95,6 +110,10 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        if (!auth()->check() || auth()->id() !== $post->user_id) {
+            abort(403, 'Ви не можете видалити цей пост');
+        }
+
         $post->delete();
 
         return redirect()->route('posts.index')

@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PostController::class, 'index'])->name('home');
@@ -20,11 +21,13 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::resource('posts', PostController::class);
 
+Route::get('/users/{user}/posts', [UserController::class, 'posts'])->name('user.posts');
+
 Route::resource('categories', CategoryController::class)->only(['index', 'show']);
 
 Route::resource('tags', TagController::class)->only(['index', 'show']);
 
-Route::resource('posts.comments', CommentController::class)->only(['store', 'destroy'])->middleware('auth');
+Route::resource('posts.comments', CommentController::class)->only(['store', 'destroy']);
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
