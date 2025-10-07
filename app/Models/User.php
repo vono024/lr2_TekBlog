@@ -33,4 +33,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Post::class);
     }
+
+    public function wishlist()
+    {
+        return $this->hasMany(\App\Models\Wishlist::class);
+    }
+
+    public function wishlistProducts()
+    {
+        return $this->belongsToMany(\App\Models\Product::class, 'wishlist');
+    }
 }

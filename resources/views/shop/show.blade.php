@@ -57,9 +57,15 @@
                         <button onclick="buyProduct('{{ $product->name }}')" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 font-semibold transition">
                             🛒 Купити зараз
                         </button>
-                        <button onclick="addToFavorites('{{ $product->name }}')" class="px-6 bg-slate-700 text-gray-300 py-3 rounded-lg hover:bg-slate-600 transition">
-                            💝 В обране
-                        </button>
+                        @auth
+                            <button onclick="toggleWishlist({{ $product->id }}, this)" id="wishlist-btn" class="px-6 bg-slate-700 text-gray-300 py-3 rounded-lg hover:bg-slate-600 transition">
+                                💝 В обране
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}" class="px-6 bg-slate-700 text-gray-300 py-3 rounded-lg hover:bg-slate-600 transition flex items-center">
+                                💝 В обране
+                            </a>
+                        @endauth
                     </div>
 
                     <div class="mt-6 p-4 bg-slate-900 rounded-lg border border-slate-700">
@@ -96,8 +102,32 @@
             alert('✅ Дякуємо за покупку!\n\n🎉 Ви придбали: ' + productName + '\n\n📧 Деталі надіслано на вашу email адресу.\n💳 Це імітація покупки для демонстрації.');
         }
 
-        function addToFavorites(productName) {
-            alert('💝 Додано в обране!\n\n' + productName + ' тепер у вашому списку бажань.');
+        async function toggleWishlist(productId, button) {
+            try {
+                const response = await fetch(`/wishlist/toggle/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.action === 'added') {
+                        button.textContent = '❤️ В обраному';
+                        alert('💝 Додано в обране!');
+                    } else {
+                        button.textContent = '💝 В обране';
+                        alert('Видалено з обраного');
+                    }
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     </script>
 @endsection

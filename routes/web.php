@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PostController::class, 'index'])->name('home');
@@ -31,3 +32,8 @@ Route::resource('posts.comments', CommentController::class)->only(['store', 'des
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});
